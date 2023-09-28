@@ -19,8 +19,8 @@ namespace DS4Windows.StickModifiers
             //Bezier,
         }
 
-        private static SmoothedInput smoothedX = new SmoothedInput(5); // Buffer size 5 for example
-        private static SmoothedInput smoothedY = new SmoothedInput(5);
+        internal static SmoothedInput smoothedX = new SmoothedInput(5); // Buffer size 5 for example
+        internal static SmoothedInput smoothedY = new SmoothedInput(5);
 
         public static void CalcOutValue(Curve type, double axisXValue, double axisYValue,
             out double axisOutXValue, out double axisOutYValue)
@@ -159,7 +159,7 @@ namespace DS4Windows.StickModifiers
         }
     }
 
-    private class SmoothedInput
+    internal class SmoothedInput
     {
         private readonly Queue<double> _buffer = new Queue<double>();
         private readonly int _bufferSize;
