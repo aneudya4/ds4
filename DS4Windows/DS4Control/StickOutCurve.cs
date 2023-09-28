@@ -19,8 +19,8 @@ namespace DS4Windows.StickModifiers
             //Bezier,
         }
 
-        private static SmoothedInput smoothedX = new SmoothedInput(5); // Buffer size 5 for example
-        private static SmoothedInput smoothedY = new SmoothedInput(5);
+        internal static SmoothedInput smoothedX = new SmoothedInput(5); // Buffer size 5 for example
+        internal static SmoothedInput smoothedY = new SmoothedInput(5);
 
         public static void CalcOutValue(Curve type, double axisXValue, double axisYValue,
             out double axisOutXValue, out double axisOutYValue)
@@ -34,6 +34,12 @@ namespace DS4Windows.StickModifiers
                 axisOutYValue = smoothedAxisYValue;
                 return;
             }
+
+              // Calculate movement speed
+            double movementSpeed = Math.Sqrt(smoothedAxisXValue * smoothedAxisXValue + smoothedAxisYValue * smoothedAxisYValue);
+
+            // Dynamic Sensitivity Adjustment
+            double sensitivityFactor = movementSpeed > 0.5 ? 1.0 : 0.5; // Example: 1.0 for fast, 0.5 for slow movements
 
             double r = Math.Atan2(axisYValue, axisXValue);
             //Console.WriteLine(r);
@@ -154,12 +160,13 @@ namespace DS4Windows.StickModifiers
                     break;
             }
 
-            axisOutXValue = outputXValue;
-            axisOutYValue = outputYValue;
+            // Apply sensitivity factor to the output values
+            axisOutXValue = outputXValue * sensitivityFactor;
+            axisOutYValue = outputYValue * sensitivityFactor;
         }
     }
 
-    private class SmoothedInput
+    internal class SmoothedInput
     {
         private readonly Queue<double> _buffer = new Queue<double>();
         private readonly int _bufferSize;
